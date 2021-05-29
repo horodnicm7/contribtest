@@ -1,4 +1,5 @@
 import os
+import pytest
 
 from src.html_generator import HtmlFileGenerator
 import shutil
@@ -38,3 +39,19 @@ def test_success():
 
     # test teardown
     shutil.rmtree(OUTPUT_DIRECTORY)
+
+
+def test_failure():
+    """
+    Tests that the input path is wrong
+    :return: None
+    """
+    # remove old tests results, if any
+    if os.path.exists(OUTPUT_DIRECTORY):
+        shutil.rmtree(OUTPUT_DIRECTORY)
+
+    generator = HtmlFileGenerator("some/random/path", OUTPUT_DIRECTORY)
+    with pytest.raises(FileNotFoundError):
+        generator.generate()
+
+    assert os.path.exists(OUTPUT_DIRECTORY) is False

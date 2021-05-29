@@ -27,6 +27,15 @@ def test_generate_success(write_mock):
     write_mock.assert_called_once_with(os.path.join("/output", "res.html"), "<h1>My awesome site</h1>\ncontent\n")
 
 
+@patch('src.utils.file_system_manager.FileSystemManager.list_files', new=MagicMock(return_value=[]))
+@patch('src.utils.file_system_manager.FileSystemManager.write_output')
+def test_generate_no_resource_files(write_mock):
+    generator = HtmlFileGenerator("/input", "/output")
+    generator.generate()
+
+    write_mock.assert_not_called()
+
+
 def test_read_template_resource_invalid_json():
     mocked_open_result = "{\"titlinvalid json \"layout: \"home.html\"}\n---\nsome content"
     with patch("builtins.open", mock_open(read_data=mocked_open_result)), \
