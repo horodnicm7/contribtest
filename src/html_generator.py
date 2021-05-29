@@ -54,7 +54,7 @@ class HtmlFileGenerator(object):
         if not os.path.exists(self.input_directory_path):
             error_message = "The input path %s does not exist!".format(self.input_directory_path)
             log.error(error_message)
-            raise FileNotFoundError(error_message)
+            return
 
         # iterate over every resource file, load its corresponding template file
         # and generate the output html file based on those two

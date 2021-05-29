@@ -38,14 +38,14 @@ def test_generate_no_resource_files(write_mock):
     write_mock.assert_not_called()
 
 
-@patch('src.utils.file_system_manager.FileSystemManager.list_files', new=MagicMock(return_value=[]))
 @patch('os.path.exists', new=MagicMock(return_value=False))
 @patch('src.utils.file_system_manager.FileSystemManager.write_output')
 def test_generate_invalid_input_path(write_mock):
     generator = HtmlFileGenerator("/input", "/output")
 
-    with pytest.raises(FileNotFoundError):
+    with patch('src.utils.file_system_manager.FileSystemManager.list_files', new=MagicMock()) as mock_list_files:
         generator.generate()
+        mock_list_files.assert_not_called()
 
 
 def test_read_template_resource_invalid_json():
