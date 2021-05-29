@@ -12,6 +12,7 @@ from src.html_generator import HtmlFileGenerator
         {"title": "My awesome site", "layout": "home.html"},
         "content"
     )))
+@patch('os.path.exists', new=MagicMock(return_value=True))
 @patch('src.utils.file_system_manager.FileSystemManager.write_output')
 def test_generate_success(write_mock):
     generator = HtmlFileGenerator("/input", "/output")
@@ -28,12 +29,23 @@ def test_generate_success(write_mock):
 
 
 @patch('src.utils.file_system_manager.FileSystemManager.list_files', new=MagicMock(return_value=[]))
+@patch('os.path.exists', new=MagicMock(return_value=True))
 @patch('src.utils.file_system_manager.FileSystemManager.write_output')
 def test_generate_no_resource_files(write_mock):
     generator = HtmlFileGenerator("/input", "/output")
     generator.generate()
 
     write_mock.assert_not_called()
+
+
+@patch('src.utils.file_system_manager.FileSystemManager.list_files', new=MagicMock(return_value=[]))
+@patch('os.path.exists', new=MagicMock(return_value=False))
+@patch('src.utils.file_system_manager.FileSystemManager.write_output')
+def test_generate_invalid_input_path(write_mock):
+    generator = HtmlFileGenerator("/input", "/output")
+
+    with pytest.raises(FileNotFoundError):
+        generator.generate()
 
 
 def test_read_template_resource_invalid_json():

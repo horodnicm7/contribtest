@@ -29,5 +29,5 @@ class FileSystemManager(object):
         if not os.path.exists(output_file_path):
             Path(os.path.dirname(output_file_path)).mkdir(parents=True, exist_ok=True)
 
-        with open(output_file_path, "wt") as f:
-            f.write(content)
+        with open(output_file_path, "wt") as file:
+            file.write(content)

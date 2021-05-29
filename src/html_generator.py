@@ -32,16 +32,14 @@ class HtmlFileGenerator(object):
         :param file_path: the file's path
         :return: Tuple(dict, str)
         """
-        with open(file_path, 'rt') as f:
+        with open(file_path, 'rt') as file:
             raw_metadata = ""
-            for line in f:
+            for line in file:
                 if line.strip() == '---':
                     break
                 raw_metadata += line
 
-            content = ""
-            for line in f:
-                content += line.strip("\n")
+            content = "".join([line.strip("\n") for line in file])
 
         return json.loads(raw_metadata), content
 
@@ -52,6 +50,11 @@ class HtmlFileGenerator(object):
         :return: None
         """
         log.info("Generating site from %r", self.input_directory_path)
+
+        if not os.path.exists(self.input_directory_path):
+            error_message = "The input path %s does not exist!".format(self.input_directory_path)
+            log.error(error_message)
+            raise FileNotFoundError(error_message)
 
         # iterate over every resource file, load its corresponding template file
         # and generate the output html file based on those two
