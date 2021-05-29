@@ -1,3 +1,6 @@
+"""
+Usage example: python main.py test/source output
+"""
 import sys
 
 from src.html_generator import HtmlFileGenerator
